@@ -18,6 +18,10 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>“Location is required to find out where you are”</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>“Location is required to find out where you are”</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 </dict>
