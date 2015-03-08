@@ -39,24 +39,23 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet var output: UITextView!
 
     @IBAction func go() {
-        var currentLocation : CLLocation? = locationManager.location
+        let currentLocation : CLLocationCoordinate2D = getCurrentLocation()
         
-        let url : NSURL = self.getStopsUrl(currentLocation)
+        let url : NSURL = NSURL(string: NSString(format: "http://" + Constants.SERVER + "/stops/%.6f/%.6f", currentLocation.latitude, currentLocation.longitude))!
         
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
             self.setText(NSString(data: data, encoding: NSUTF8StringEncoding)!)
         }
         
         task.resume()
-
     }
     
-    func getStopsUrl(location : CLLocation?) -> NSURL {
+    func getCurrentLocation() -> CLLocationCoordinate2D {
+        var location : CLLocation? = locationManager.location
         if (location != nil) {
-            var actualLocation : CLLocationCoordinate2D = location!.coordinate
-            return NSURL(string: NSString(format: "http://localhost:8888/stops/%.6f/%.6f", actualLocation.latitude, actualLocation.longitude))!
+            return location!.coordinate
         } else {
-            return NSURL(string: "http://localhost:8888/stops/41.9023999/-87.6310129")!
+           return CLLocationCoordinate2D(latitude: 41.9023999, longitude: -87.6310129)
         }
     }
     
