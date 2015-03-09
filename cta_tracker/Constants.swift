@@ -10,8 +10,11 @@ import Foundation
 
 struct Constants {
     
-    static let SERVER : String = "localhost:8888"
-    
+    struct URL {
+        static let URL_PREFIX : String = "http://"
+        static let SERVER : String = "localhost:8888"
+    }
+        
     struct CTA_Keys {
         static let REQUEST_KEY : String = "f0701a42ffe249dc9b888517df1ee4b3"
         static let API_KEY : String = "X7gT3f4PAMX87fAMBUpMXHXiY"

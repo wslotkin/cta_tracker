@@ -52,14 +52,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         self.mapView.removeAnnotations(self.mapView.annotations)
         self.addUserLocationToMap(currentLocation)
         
-        let url = NSURL(string: String(format: "http://" + Constants.SERVER + "/stops?lat=%.6f&lon=%.6f&stops=10", currentLocation.latitude, currentLocation.longitude))!
+        let path = "/stops"
+        let parameters = ["lat": currentLocation.latitude.description,
+            "lon": currentLocation.longitude.description,
+            "stops": 5.description]
         
-        
-        let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            self.handleResult(data, handler: self.handle)
-        }
-        
-        task.resume()
+        getRequest(path, parameters, self.handle)
     }
     
     func addUserLocationToMap(location : CLLocationCoordinate2D) {
@@ -79,7 +77,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     
     func handle(jsonData : Array<Dictionary<String, AnyObject>>) {
         dispatch_async(dispatch_get_main_queue(),{
-            for stop : Dictionary<String, AnyObject> in jsonData {
+            for stop in jsonData {
                 var lat = stop["stop_lat"]! as Double
                 var lon = stop["stop_lon"]! as Double
                 let annotation = MKPointAnnotation()
@@ -89,12 +87,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         })
     }
     
-    func handleResult(data : NSData, handler : Array<Dictionary<String, AnyObject>> -> Void) {
-        var error : NSError?
-        let rawJson: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &error)
-        let jsonDict = rawJson! as Array<Dictionary<String, AnyObject>>
-        handler(jsonDict)
-    }
 
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         let locValue = manager.location.coordinate
