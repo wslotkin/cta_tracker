@@ -17,8 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XP5-od-Frn">
-                                <rect key="frame" x="246" y="411" width="108" height="73"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XP5-od-Frn">
+                                <rect key="frame" x="257" y="543" width="87" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="73" id="TMX-A5-jAi"/>
                                     <constraint firstAttribute="width" constant="108" id="hXs-2f-9TH"/>
@@ -31,25 +31,24 @@
                                     <action selector="go" destination="vXZ-lx-hvc" eventType="touchUpInside" id="LF0-98-sv9"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gG5-ce-KxQ">
-                                <rect key="frame" x="36" y="34" width="528" height="324"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kQD-hZ-pLt">
+                                <rect key="frame" x="16" y="20" width="568" height="347"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="347" id="atT-mm-LtX"/>
+                                </constraints>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="gG5-ce-KxQ" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="14" id="0BY-Rx-Z5v"/>
-                            <constraint firstItem="gG5-ce-KxQ" firstAttribute="centerX" secondItem="XP5-od-Frn" secondAttribute="centerX" id="aZf-wD-2fk"/>
+                            <constraint firstItem="kQD-hZ-pLt" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="6zA-Uj-DCY"/>
+                            <constraint firstItem="kQD-hZ-pLt" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="cHM-gg-yRs"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="XP5-od-Frn" secondAttribute="bottom" constant="116" id="eLF-Lt-8je"/>
-                            <constraint firstItem="gG5-ce-KxQ" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="20" id="enw-Ya-Eyz"/>
-                            <constraint firstItem="gG5-ce-KxQ" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="tSq-12-UFR"/>
-                            <constraint firstItem="XP5-od-Frn" firstAttribute="top" secondItem="gG5-ce-KxQ" secondAttribute="bottom" constant="53" id="zfB-nr-G2L"/>
+                            <constraint firstItem="kQD-hZ-pLt" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="vwf-h4-lBr"/>
+                            <constraint firstItem="kQD-hZ-pLt" firstAttribute="centerX" secondItem="XP5-od-Frn" secondAttribute="centerX" id="yA8-lQ-sYR"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="output" destination="gG5-ce-KxQ" id="oxI-TH-7To"/>
+                        <outlet property="mapView" destination="kQD-hZ-pLt" id="xdk-Ah-TMH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>

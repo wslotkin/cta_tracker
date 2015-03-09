@@ -10,10 +10,10 @@ import Foundation
 
 struct Constants {
     
-    static let SERVER : NSString = "localhost:8888"
+    static let SERVER : String = "localhost:8888"
     
     struct CTA_Keys {
-        static let REQUEST_KEY : NSString = "f0701a42ffe249dc9b888517df1ee4b3"
-        static let API_KEY : NSString = "X7gT3f4PAMX87fAMBUpMXHXiY"
+        static let REQUEST_KEY : String = "f0701a42ffe249dc9b888517df1ee4b3"
+        static let API_KEY : String = "X7gT3f4PAMX87fAMBUpMXHXiY"
     }
 }

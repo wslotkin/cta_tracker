@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreLocation
+import MapKit
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
 
     let locationManager = CLLocationManager()
     
@@ -29,6 +30,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
         }
+        
+        mapView.delegate = self
+        let location = CLLocationCoordinate2D(latitude: 41.9023999, longitude: -87.6310129)
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegion(center: location, span: span)
+        mapView.setRegion(region, animated: true)
+        
+        self.addUserLocationToMap(location)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,38 +45,74 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBOutlet var output: UITextView!
+    @IBOutlet var mapView : MKMapView!
 
     @IBAction func go() {
-        let currentLocation : CLLocationCoordinate2D = getCurrentLocation()
+        let currentLocation = getCurrentLocation()
+        self.mapView.removeAnnotations(self.mapView.annotations)
+        self.addUserLocationToMap(currentLocation)
         
-        let url : NSURL = NSURL(string: NSString(format: "http://" + Constants.SERVER + "/stops/%.6f/%.6f", currentLocation.latitude, currentLocation.longitude))!
+        let url = NSURL(string: String(format: "http://" + Constants.SERVER + "/stops?lat=%.6f&lon=%.6f&stops=10", currentLocation.latitude, currentLocation.longitude))!
+        
         
         let task = NSURLSession.sharedSession().dataTaskWithURL(url) {(data, response, error) in
-            self.setText(NSString(data: data, encoding: NSUTF8StringEncoding)!)
+            self.handleResult(data, handler: self.handle)
         }
         
         task.resume()
     }
     
+    func addUserLocationToMap(location : CLLocationCoordinate2D) {
+        let userLocation = MKUserLocation()
+        userLocation.setCoordinate(location)
+        mapView.addAnnotation(userLocation)
+    }
+    
     func getCurrentLocation() -> CLLocationCoordinate2D {
-        var location : CLLocation? = locationManager.location
+        let location = locationManager.location
         if (location != nil) {
             return location!.coordinate
         } else {
-           return CLLocationCoordinate2D(latitude: 41.9023999, longitude: -87.6310129)
+           return self.mapView.centerCoordinate
         }
     }
     
-    func setText(text : NSString) {
+    func handle(jsonData : Array<Dictionary<String, AnyObject>>) {
         dispatch_async(dispatch_get_main_queue(),{
-            self.output.text = text
+            for stop : Dictionary<String, AnyObject> in jsonData {
+                var lat = stop["stop_lat"]! as Double
+                var lon = stop["stop_lon"]! as Double
+                let annotation = MKPointAnnotation()
+                annotation.setCoordinate(CLLocationCoordinate2D(latitude: lat, longitude: lon))
+                self.mapView.addAnnotation(annotation)
+            }
         })
+    }
+    
+    func handleResult(data : NSData, handler : Array<Dictionary<String, AnyObject>> -> Void) {
+        var error : NSError?
+        let rawJson: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &error)
+        let jsonDict = rawJson! as Array<Dictionary<String, AnyObject>>
+        handler(jsonDict)
     }
 
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        var locValue:CLLocationCoordinate2D = manager.location.coordinate
+        let locValue = manager.location.coordinate
         println("locations = \(locValue.latitude) \(locValue.longitude)")
+    }
+    
+    func view(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        var view : MKAnnotationView? = nil
+        if !(annotation is MKUserLocation) {
+            let defaultPin = "pinIdentifier"
+            view = mapView.dequeueReusableAnnotationViewWithIdentifier(defaultPin) as? MKPinAnnotationView
+            if(view == nil) {
+                view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: defaultPin)
+            }
+            var pinView = view! as MKPinAnnotationView
+            pinView.animatesDrop = true
+        }
+        return view
     }
 }
 
